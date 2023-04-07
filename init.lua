@@ -35,7 +35,6 @@ I hope you enjoy your Neovim journey,
 
 P.S. You can delete this when you're done too. It's your config now :)
 --]]
-
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
@@ -58,6 +57,9 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+local functions = require('functions')
+local map = functions.map
+
 -- NOTE: Here is where you install your plugins.
 --  You can configure plugins using the `config` key.
 --
@@ -66,7 +68,6 @@ vim.opt.rtp:prepend(lazypath)
 require('plugins').setup()
 
 -- [[ Setting options ]]
--- See `:help vim.o`
 require('options').setup()
 
 -- [[ Basic Keymaps ]]
@@ -83,36 +84,122 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   pattern = '*',
 })
 
+local lsp_group = vim.api.nvim_create_augroup("lsp", { clear = true })
+
 -- [[ Scala metals ]]
 -- See `:help metals`???
--- local nvim_metals_group = vim.api.nvim_create_augroup("nvim-metals", { clear = true })
--- vim.api.nvim_create_autocmd("FileType", {
--- pattern = { "scala", "sbt", "java" },
---  callback = function()
---    require("metals").initialize_or_attach(
---    {
---      tvp = {
---        icons = {
---          enabled = true
---        }
---      },
---      settings = {
---        showImplicitArguments = true,
---        showImplicitConversionsAndClasses = true,
---        showInferredType = true,
---        excludedPackages = {
---          "akka.actor.typed.javadsl",
---          "com.github.swagger.akka.javadsl",
---          "akka.stream.javadsl",
---          "akka.http.javadsl",
---        },
---        fallbackScalaVersion = "2.13.8",
---        serverVersion = "latest.snapshot",
---      }
---    })
---    end,
---  group = nvim_metals_group,
---})
+local nvim_metals_group = vim.api.nvim_create_augroup("nvim-metals", { clear = true })
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "scala", "sbt", "java" },
+  callback =
+      function()
+        local metals_config = require("metals").bare_config()
+        metals_config.tvp = {
+          icons = {
+            enabled = true
+          }
+        }
+        metals_config.settings = {
+          showImplicitArguments = true,
+          showImplicitConversionsAndClasses = true,
+          showInferredType = true,
+          excludedPackages = {
+            "akka.actor.typed.javadsl",
+            "com.github.swagger.akka.javadsl",
+            "akka.stream.javadsl",
+            "akka.http.javadsl",
+          },
+          fallbackScalaVersion = "2.13.8",
+          serverVersion = "latest.snapshot",
+        }
+
+        metals_config.init_options.statusBarProvider = "on"
+        -- metals_config.capabilities = capabilities
+
+        metals_config.on_attach = function(client, bufnr)
+          -- Metals specific mappings
+          map("v", "K", [[<Esc><cmd>lua require("metals").type_of_range()<CR>]])
+          map("n", "<leader>ws", [[<cmd>lua require("metals").hover_worksheet({ border = "single" })<CR>]])
+          map("n", "<leader>tt", [[<cmd>lua require("metals.tvp").toggle_tree_view()<CR>]])
+          map("n", "<leader>tr", [[<cmd>lua require("metals.tvp").reveal_in_tree()<CR>]])
+          map("n", "<leader>st", [[<cmd>lua require("metals").toggle_setting("showImplicitArguments")<CR>]])
+
+          vim.api.nvim_create_autocmd("CursorHold", {
+            callback = vim.lsp.buf.document_highlight,
+            buffer = bufnr,
+            group = lsp_group,
+          })
+          vim.api.nvim_create_autocmd("CursorMoved", {
+            callback = vim.lsp.buf.clear_references,
+            buffer = bufnr,
+            group = lsp_group,
+          })
+          vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
+            callback = vim.lsp.codelens.refresh,
+            buffer = bufnr,
+            group = lsp_group,
+          })
+          vim.api.nvim_create_autocmd("FileType", {
+            pattern = { "dap-repl" },
+            callback = function()
+              require("dap.ext.autocompl").attach()
+            end,
+            group = lsp_group,
+          })
+
+          -- nvim-dap
+          local dap = require("dap")
+
+          dap.configurations.scala = {
+            {
+              type = "scala",
+              request = "launch",
+              name = "Run or test with input",
+              metals = {
+                runType = "runOrTestFile",
+                args = function()
+                  local args_string = vim.fn.input("Arguments: ")
+                  return vim.split(args_string, " +")
+                end,
+              },
+            },
+            {
+              type = "scala",
+              request = "launch",
+              name = "Run or Test",
+              metals = {
+                runType = "runOrTestFile",
+              },
+            },
+            {
+              type = "scala",
+              request = "launch",
+              name = "Test Target",
+              metals = {
+                runType = "testTarget",
+              },
+            },
+          }
+
+          map("n", "<leader>dc", [[<cmd>lua require("dap").continue()<CR>]])
+          map("n", "<leader>dr", [[<cmd>lua require("dap").repl.toggle()<CR>]])
+          map("n", "<leader>dK", [[<cmd>lua require("dap.ui.widgets").hover()<CR>]])
+          map("n", "<leader>dt", [[<cmd>lua require("dap").toggle_breakpoint()<CR>]])
+          map("n", "<leader>dso", [[<cmd>lua require("dap").step_over()<CR>]])
+          map("n", "<leader>dsi", [[<cmd>lua require("dap").step_into()<CR>]])
+          map("n", "<leader>drl", [[<cmd>lua require("dap").run_last()<CR>]])
+
+          dap.listeners.after["event_terminated"]["nvim-metals"] = function(session, body)
+            dap.repl.open()
+          end
+
+          require("metals").setup_dap()
+        end
+
+        require("metals").initialize_or_attach(metals_config)
+      end,
+  group = nvim_metals_group,
+})
 
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
@@ -358,4 +445,3 @@ cmp.setup {
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
-
