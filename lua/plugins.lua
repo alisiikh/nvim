@@ -7,6 +7,13 @@ function setup()
     'tpope/vim-fugitive',
     'tpope/vim-rhubarb',
 
+    -- File tree explorer
+    {
+      'nvim-tree/nvim-tree.lua',
+      opts = {
+      }
+    },
+
     -- Github copilot, use :Copilot setup to configure
     'github/copilot.vim',
 
@@ -39,7 +46,6 @@ function setup()
         'folke/neodev.nvim',
       },
     },
-
 
     {
       'simrat39/rust-tools.nvim',
