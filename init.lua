@@ -76,6 +76,19 @@ require('options').setup()
 -- [[ Basic Keymaps ]]
 require('keys').setup()
 
+
+local nvm_tree = require('nvim-tree')
+nvm_tree.setup {
+  on_attach = function(bufnr)
+    local api = require('nvim-tree.api')
+    local function opts(desc)
+      return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+    end
+
+    -- TODO: add keymaps for nvim-tree
+  end
+}
+
 local lsp_group = vim.api.nvim_create_augroup("lsp", { clear = true })
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
@@ -290,6 +303,17 @@ require('nvim-treesitter.configs').setup {
   },
 }
 
+local rt = require('rust-tools')
+rt.setup({
+  server = {
+    on_attach = function(_, bufnr)
+      -- Hover actions
+      vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
+      -- Code action groups
+      vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
+    end,
+  }
+})
 
 -- Enable the following language servers
 --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -391,7 +415,7 @@ cmp.setup {
   mapping = cmp.mapping.preset.insert {
     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<C-Space>'] = cmp.mapping.complete {},
+    ['<C-Space>'] = cmp.mapping.complete(),
     ['<CR>'] = cmp.mapping.confirm {
       behavior = cmp.ConfirmBehavior.Replace,
       select = true,

@@ -48,21 +48,13 @@ function setup()
     {
       'simrat39/rust-tools.nvim',
       opts = {
-        server = {
-          on_attach = function(_, bufnr)
-            -- Hover actions
-            vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
-            -- Code action groups
-            vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
-          end,
-        },
       }
     },
 
     {
       -- Autocompletion
       'hrsh7th/nvim-cmp',
-      dependencies = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip' },
+      dependencies = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip' }
     },
 
     -- Useful plugin to show you pending keybinds.
