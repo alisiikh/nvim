@@ -1,3 +1,8 @@
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 -- See `:help vim.o`
 -- Set highlight on search
 vim.o.hlsearch = false
