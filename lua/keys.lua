@@ -14,29 +14,30 @@ function setup()
     map('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
     -- Diagnostic keymaps
-    map('n', '[d', vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic message" })
-    map('n', ']d', vim.diagnostic.goto_next, { desc = "Go to next diagnostic message" })
-    map('n', '<leader>E', vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
-    map('n', '<leader>q', vim.diagnostic.setloclist, { desc = "Open diagnostics list" })
+    map('n', '[d', vim.diagnostic.goto_prev, { desc = "go to previous diagnostic message" })
+    map('n', ']d', vim.diagnostic.goto_next, { desc = "go to next diagnostic message" })
+    map('n', '<leader>E', vim.diagnostic.open_float, { desc = "open floating diagnostic message" })
+    map('n', '<leader>q', vim.diagnostic.setloclist, { desc = "open diagnostics list" })
 
     -- Telescope
     -- See `:help telescope.builtin`
     local telescope = require('telescope.builtin')
-    map('n', '<leader>?', telescope.oldfiles, { desc = '[?] Find recently opened files' })
-    map('n', '<leader><space>', telescope.buffers, { desc = '[ ] Find existing buffers' })
+    map('n', '<leader>?', telescope.oldfiles, { desc = 'find recently opened files' })
+    map('n', '<leader><space>', telescope.buffers, { desc = 'find existing buffers' })
     map('n', '<leader>/', function()
       -- You can pass additional configuration to telescope to change theme, layout, etc.
-      telescope.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+      local themes = require('telescope.themes')
+      telescope.current_buffer_fuzzy_find(themes.get_dropdown {
         winblend = 10,
         previewer = false,
       })
-    end, { desc = '[/] Fuzzily search in current buffer' })
-    map('n', '<leader>s', '<Nop>', { desc = '[S]earch (Telescope)' })
-    map('n', '<leader>sf', telescope.find_files, { desc = '[S]earch [F]iles' })
-    map('n', '<leader>sh', telescope.help_tags, { desc = '[S]earch [H]elp' })
-    map('n', '<leader>sw', telescope.grep_string, { desc = '[S]earch current [W]ord' })
-    map('n', '<leader>sg', telescope.live_grep, { desc = '[S]earch by [G]rep' })
-    map('n', '<leader>sd', telescope.diagnostics, { desc = '[S]earch [D]iagnostics' })
+    end, { desc = 'Fuzzily search in current buffer' })
+    map('n', '<leader>s', '<Nop>', { desc = 'telescope: Search' })
+    map('n', '<leader>sf', telescope.find_files, { desc = '[s]earch [f]iles' })
+    map('n', '<leader>sh', telescope.help_tags, { desc = '[s]earch [h]elp' })
+    map('n', '<leader>sw', telescope.grep_string, { desc = '[s]earch current [w]ord' })
+    map('n', '<leader>sg', telescope.live_grep, { desc = '[s]earch by [g]rep' })
+    map('n', '<leader>sd', telescope.diagnostics, { desc = '[s]earch [d]iagnostics' })
 end
 
 return {
