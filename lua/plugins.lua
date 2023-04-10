@@ -10,6 +10,8 @@ return require('lazy').setup({
   'nvim-tree/nvim-tree.lua',
   'nvim-tree/nvim-web-devicons',
 
+  'theprimeagen/harpoon',
+
   -- Github copilot, use :Copilot setup to configure
   'github/copilot.vim',
 
