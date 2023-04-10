@@ -49,4 +49,3 @@ map('n', ']d', vim.diagnostic.goto_next, { desc = "go to next diagnostic message
 map('n', '<leader>E', vim.diagnostic.open_float, { desc = "open floating diagnostic message" })
 map('n', '<leader>q', vim.diagnostic.setloclist, { desc = "open diagnostics list" })
 
-

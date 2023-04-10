@@ -2,6 +2,8 @@ return require('lazy').setup({
   -- NOTE: First, some plugins that:q
   -- don't require any configuration
 
+  { "catppuccin/nvim", name = "catppuccin" },
+
   -- Git related pluginss
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
