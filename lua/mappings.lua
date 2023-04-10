@@ -30,6 +30,19 @@ map('n', 'N', 'Nzzzv')
 -- cut into the copy buffer and paste keeping the buffer
 map('x', '<leader>p', "\"_dP")
 
+-- copy into system clipboard, use y not to (useful for copying outside of vim context)
+map('n', '<leader>y', "\"+y")
+map('v', '<leader>y', "\"+y")
+map('n', '<leader>Y', "\"+Y")
+
+map('n', '<leader>d', "\"_d")
+map('v', '<leader>d', "\"_d")
+
+map('n', 'Q', '<nop>')
+
+-- format code
+map('n', '<leader>f', function() vim.lsp.buf.format() end)
+
 -- Diagnostic keymaps
 map('n', '[d', vim.diagnostic.goto_prev, { desc = "go to previous diagnostic message" })
 map('n', ']d', vim.diagnostic.goto_next, { desc = "go to next diagnostic message" })
