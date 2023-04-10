@@ -11,6 +11,7 @@ return require('lazy').setup({
   'nvim-tree/nvim-web-devicons',
 
   'theprimeagen/harpoon',
+  'mbbill/undotree',
 
   -- Github copilot, use :Copilot setup to configure
   'github/copilot.vim',
