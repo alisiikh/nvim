@@ -7,7 +7,7 @@ return require('lazy').setup({
   'tpope/vim-rhubarb',
 
   -- File tree explorer
-  { 'nvim-tree/nvim-tree.lua', opts = {} },
+  'nvim-tree/nvim-tree.lua',
   'nvim-tree/nvim-web-devicons',
 
   -- Github copilot, use :Copilot setup to configure
@@ -21,7 +21,6 @@ return require('lazy').setup({
 
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
-
 
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
@@ -44,11 +43,7 @@ return require('lazy').setup({
     },
   },
 
-  {
-    'simrat39/rust-tools.nvim',
-    opts = {
-    }
-  },
+  'simrat39/rust-tools.nvim',
 
   {
     -- Autocompletion
