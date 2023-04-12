@@ -3,7 +3,6 @@
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 --]]
-
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -14,7 +13,7 @@ if not vim.loop.fs_stat(lazypath) then
     'clone',
     '--filter=blob:none',
     'https://github.com/folke/lazy.nvim.git',
-    '--branch=stabl', -- latest stable release
+    '--branch=stable', -- latest stable release
     lazypath,
   }
 end
@@ -38,7 +37,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- [[ delete trailing whitespace on save ]]
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   pattern = "*",
-  callback = function ()
+  callback = function()
     local cursor = vim.fn.getpos(".")
     vim.cmd([[%s/\s\+$//e]])
     vim.fn.setpos(".", cursor)
