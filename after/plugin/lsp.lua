@@ -1,7 +1,7 @@
 local function map(mode, lhs, rhs, opts)
   local options = { noremap = true }
   if opts then
-      options = vim.tbl_extend("force", options, opts)
+    options = vim.tbl_extend("force", options, opts)
   end
   vim.api.nvim_set_keymap(mode, lhs, rhs, options)
 end
@@ -44,11 +44,23 @@ vim.api.nvim_create_autocmd("FileType", {
 
         metals_config.on_attach = function(client, bufnr)
           -- Metals specific mappings
-          map("v", "K", [[<Esc><cmd>lua require("metals").type_of_range()<CR>]], { desc = 'metals: see type of range'})
-          map("n", "<leader>ws", [[<cmd>lua require("metals").hover_worksheet({ border = "single" })<CR>]], { desc = 'metals: hover worksheet' })
-          map("n", "<leader>tt", [[<cmd>lua require("metals.tvp").toggle_tree_view()<CR>]], { desc = 'metals: toggle tree view'})
-          map("n", "<leader>tr", [[<cmd>lua require("metals.tvp").reveal_in_tree()<CR>]], { desc = 'metals: reveal in tree'})
-          map("n", "<leader>st", [[<cmd>lua require("metals").toggle_setting("showImplicitArguments")<CR>]], { desc = 'metals: show implicit args'})
+          map("v", "<leader>mt", [[<Esc><cmd>lua require("metals").type_of_range()<CR>]],
+            { desc = 'metals: see type of range' })
+          map("n", "<leader>mw", [[<cmd>lua require("metals").hover_worksheet({ border = "single" })<CR>]],
+            { desc = 'metals: hover worksheet' })
+          map("n", "<leader>mv", [[<cmd>lua require("metals.tvp").toggle_tree_view()<CR>]],
+            { desc = 'metals: toggle tree view' })
+          map("n", "<leader>mr", [[<cmd>lua require("metals.tvp").reveal_in_tree()<CR>]],
+            { desc = 'metals: reveal in tree' })
+          map("n", "<leader>mi", [[<cmd>lua require("metals").toggle_setting("showImplicitArguments")<CR>]],
+            { desc = 'metals: show implicit args' })
+          map("n", "<leader>mf", [[<cmd>lua require("metals").organize_imports()<CR>]],
+            { desc = 'metals: organize imports' })
+          map("n", "<leader>mg", [[<cmd>lua require("metals").goto_location()<CR>]], { desc = 'metals: goto location' })
+          map("n", "<leader>md", [[<cmd>lua require("metals").implementation_location()<CR>]],
+            { desc = 'metals: implementation location' })
+
+          attach_lsp(bufnr)
 
           vim.api.nvim_create_autocmd("CursorHold", {
             callback = vim.lsp.buf.document_highlight,
@@ -112,8 +124,8 @@ vim.api.nvim_create_autocmd("FileType", {
           map("n", "<leader>dK", [[<cmd>lua require("dap.ui.widgets").hover()<CR>]], { desc = 'dap: hover' })
           map("n", "<leader>dt", [[<cmd>lua require("dap").toggle_breakpoint()<CR>]], { desc = 'dap: toggle breakpoint' })
           map("n", "<leader>dso", [[<cmd>lua require("dap").step_over()<CR>]], { desc = 'dap: step over' })
-          map("n", "<leader>dsi", [[<cmd>lua require("dap").step_into()<CR>]], { desc = 'dap: step into'})
-          map("n", "<leader>drl", [[<cmd>lua require("dap").run_last()<CR>]], { desc = 'dap: run last'})
+          map("n", "<leader>dsi", [[<cmd>lua require("dap").step_into()<CR>]], { desc = 'dap: step into' })
+          map("n", "<leader>drl", [[<cmd>lua require("dap").run_last()<CR>]], { desc = 'dap: run last' })
 
           dap.listeners.after["event_terminated"]["nvim-metals"] = function(session, body)
             dap.repl.open()
@@ -135,7 +147,7 @@ rt.setup({
       -- Hover actions
       vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
       -- Code action groups
-      vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
+      vim.keymap.set("n", "<leader>ca", rt.code_action_group.code_action_group, { buffer = bufnr })
     end,
   }
 })
@@ -166,6 +178,41 @@ require('neodev').setup()
 -- Setup mason so it can manage external tooling
 require('mason').setup()
 
+function attach_lsp(bufnr)
+  local nmap = function(keys, func, desc)
+    if desc then
+      desc = 'lsp: ' .. desc
+    end
+    vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
+  end
+
+  nmap('<leader>rn', vim.lsp.buf.rename, 'lsp: [r]e[n]ame')
+  nmap('<leader>ca', vim.lsp.buf.code_action, 'lsp: [c]ode [a]ction')
+
+  nmap('gd', vim.lsp.buf.definition, 'lsp: [g]oto [d]efinition')
+  nmap('gr', require('telescope.builtin').lsp_references, 'lsp: [g]oto [r]eferences')
+  nmap('gI', vim.lsp.buf.implementation, 'lsp: [g]oto [i]mplementation')
+  nmap('<leader>td', vim.lsp.buf.type_definition, 'lsp: [t]ype [d]efinition')
+  nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, 'lsp: [d]ocument [s]ymbols')
+  nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'lsp: [w]orkspace [s]ymbols')
+
+  -- See `:help K` for why this keymap
+  nmap('K', vim.lsp.buf.hover, 'lsp: hover documentation')
+  nmap('<C-k>', vim.lsp.buf.signature_help, 'lsp: signature documentation')
+
+  -- Lesser used LSP functionality
+  nmap('gD', vim.lsp.buf.declaration, 'lsp: [g]oto [d]eclaration')
+  nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, 'lsp: [w]orkspace [a]dd Folder')
+  nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, 'lsp: [w]orkspace [r]emove Folder')
+  nmap('<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end,
+    'lsp: [w]orkspace [l]ist folders')
+
+  -- Create a command `:Format` local to the LSP buffer
+  vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
+    vim.lsp.buf.format()
+  end, { desc = 'lsp: format code' })
+end
+
 -- Ensure the servers above are installed
 local mason_lspconfig = require('mason-lspconfig')
 
@@ -184,37 +231,7 @@ mason_lspconfig.setup_handlers {
       --
       -- In this case, we create a function that lets us more easily define mappings specific
       -- for LSP related items. It sets the mode, buffer and description for us each time.
-      local nmap = function(keys, func, desc)
-        if desc then
-          desc = 'lsp: ' .. desc
-        end
-        vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
-      end
-
-      nmap('<leader>rn', vim.lsp.buf.rename, 'lsp: [r]e[n]ame')
-      nmap('<leader>ca', vim.lsp.buf.code_action, 'lsp: [c]ode [a]ction')
-
-      nmap('gd', vim.lsp.buf.definition, 'lsp: [g]oto [d]efinition')
-      nmap('gr', require('telescope.builtin').lsp_references, 'lsp: [g]oto [r]eferences')
-      nmap('gI', vim.lsp.buf.implementation, 'lsp: [g]oto [i]mplementation')
-      nmap('<leader>D', vim.lsp.buf.type_definition, 'lsp: type [d]efinition')
-      nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, 'lsp: [d]ocument [s]ymbols')
-      nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'lsp: [w]orkspace [s]ymbols')
-
-      -- See `:help K` for why this keymap
-      nmap('K', vim.lsp.buf.hover, 'lsp: hover documentation')
-      nmap('<C-k>', vim.lsp.buf.signature_help, 'lsp: signature documentation')
-
-      -- Lesser used LSP functionality
-      nmap('gD', vim.lsp.buf.declaration, 'lsp: [g]oto [d]eclaration')
-      nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, 'lsp: [w]orkspace [a]dd Folder')
-      nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, 'lsp: [w]orkspace [r]emove Folder')
-      nmap('<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, 'lsp: [w]orkspace [l]ist folders')
-
-      -- Create a command `:Format` local to the LSP buffer
-      vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-        vim.lsp.buf.format()
-      end, { desc = 'lsp: format code' })
+      attach_lsp(bufnr)
     end
 
     require('lspconfig')[server_name].setup {

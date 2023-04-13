@@ -8,8 +8,8 @@ local function map(n, key, f, desc)
   vim.keymap.set(n, key, f, { desc = desc })
 end
 
-map('n', '<leader>he', ui.toggle_quick_menu, 'toggle quick menu')
-map('n', '<leader>ha', mark.add_file, 'add file')
-map('n', '<leader>hn', ui.nav_next, 'next file')
-map('n', '<leader>hh', ui.nav_prev, 'prev file')
+map('n', '<leader>h', ui.toggle_quick_menu, 'toggle quick menu')
+map('n', '<leader>a', mark.add_file, 'add file')
+map('n', '<C-h>', ui.nav_prev, 'prev file')
+map('n', '<C-l>', ui.nav_next, 'next file')
 
