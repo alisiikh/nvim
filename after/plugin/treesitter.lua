@@ -5,7 +5,7 @@ require('nvim-treesitter.configs').setup {
   ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'toml', 'scala', 'tsx', 'typescript', 'vimdoc', 'vim' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-  auto_install = false,
+  auto_install = true,
 
   highlight = { enable = true },
   indent = { enable = true, disable = { 'python' } },
@@ -53,14 +53,13 @@ require('nvim-treesitter.configs').setup {
       },
     },
     swap = {
-      enable = false, -- was true
-      --[[ swap_next = {
-        ['<leader>a'] = '@parameter.inner',
+      enable = true,
+      swap_next = {
+        ['<leader>pp'] = '@parameter.inner',
       },
       swap_previous = {
-        ['<leader>A'] = '@parameter.inner',
+        ['<leader>pP'] = '@parameter.inner',
       },
-      ]]--
     },
   },
 }

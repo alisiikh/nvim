@@ -2,7 +2,7 @@ return require('lazy').setup({
   -- NOTE: First, some plugins that:q
   -- don't require any configuration
 
-  { "catppuccin/nvim", name = "catppuccin" },
+  { "catppuccin/nvim",      name = "catppuccin" },
 
   -- Git related pluginss
   'tpope/vim-fugitive',
@@ -16,7 +16,27 @@ return require('lazy').setup({
   'mbbill/undotree',
 
   -- Github copilot, use :Copilot setup to configure
-  'github/copilot.vim',
+  {
+    'zbirenbaum/copilot.lua',
+    cmd = "Copilot",
+    event = "InsertEnter",
+    config = function()
+      require("copilot").setup({
+        suggestion = {
+          enabled = true,
+          auto_trigger = true,
+          debounce = 0,
+          keymap = {
+            accept = "§",
+          }
+        },
+        filetypes = {
+          scala = true,
+          lua = true
+        }
+      })
+    end,
+  },
 
   -- Scala metals
   {
@@ -57,7 +77,7 @@ return require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim',          opts = {} },
+  { 'folke/which-key.nvim', opts = {} },
   {
     -- Adds git releated signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -153,4 +173,3 @@ return require('lazy').setup({
   --    to get rid of the warning telling you that there are not plugins in `lua/custom/plugins/`.
   -- { import = 'custom.plugins' },
 }, {})
-

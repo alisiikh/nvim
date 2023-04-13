@@ -41,11 +41,12 @@ map('v', '<leader>d', "\"_d")
 map('n', 'Q', '<nop>')
 
 -- format code
-map('n', '<leader>f', function() vim.lsp.buf.format() end)
+map('n', '<leader>fc', function() vim.lsp.buf.format() end, { desc = '[c]ode [f]ormat' })
+map('v', '<leader>fr', function() vim.lsp.buf.range_format() end, { desc = '[r]ange [f]ormat' })
 
 -- Diagnostic keymaps
-map('n', '[d', vim.diagnostic.goto_prev, { desc = "go to previous diagnostic message" })
-map('n', ']d', vim.diagnostic.goto_next, { desc = "go to next diagnostic message" })
+map('n', '[d', vim.diagnostic.goto_prev, { desc = "jump prev diagnostic message" })
+map('n', ']d', vim.diagnostic.goto_next, { desc = "jump next diagnostic message" })
 map('n', '<leader>E', vim.diagnostic.open_float, { desc = "open floating diagnostic message" })
 map('n', '<leader>q', vim.diagnostic.setloclist, { desc = "open diagnostics list" })
 
