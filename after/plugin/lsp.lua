@@ -6,6 +6,7 @@ function attach_lsp(bufnr)
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
 
+
   nmap('<leader>cr', vim.lsp.buf.rename, '[r]e[n]ame')
   nmap('<leader>ca', vim.lsp.buf.code_action, '[c]ode [a]ction')
   nmap('<leader>cf', vim.lsp.buf.format, '[c]ode [f]ormat')

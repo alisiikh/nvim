@@ -48,6 +48,9 @@ return require('lazy').setup({
 
   -- Multi-line selection
   'mg979/vim-visual-multi',
+  -- Scroll bar on the right to show your posiiton in the file
+  'gen740/SmoothCursor.nvim',
+
 
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
@@ -122,7 +125,7 @@ return require('lazy').setup({
   },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim',         opts = {} },
+  'numToStr/Comment.nvim',
 
   -- Fuzzy Finder (files, lsp, etc)
   { 'nvim-telescope/telescope.nvim', version = '*', dependencies = { 'nvim-lua/plenary.nvim' } },
