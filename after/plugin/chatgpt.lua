@@ -17,13 +17,14 @@ gpt.setup({
   },
 })
 
-
-local function nmap(lhs, rhs, desc)
+local function map(mode, lhs, rhs, desc)
   if (desc) then
     desc = "gpt: " .. desc
   end
 
-  vim.keymap.set('n', lhs, rhs, { desc = desc, silent = true })
+  vim.keymap.set(mode, lhs, rhs, { desc = desc, silent = true })
 end
 
-nmap('<leader>gg', ':ChatGPT<CR>', 'open prompt')
+map('n', '<leader>gg', gpt.openChat, 'open chat')
+map('v', '<leader>ge', gpt.edit_with_instructions, 'edit with instructions')
+map('n', '<leader>ga', gpt.selectAwesomePrompt, 'act as')

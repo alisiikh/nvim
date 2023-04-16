@@ -1,7 +1,6 @@
 return require('lazy').setup({
-  -- NOTE: First, some plugins that:q
-  -- don't require any configuration
 
+  -- Catppuccin theme
   { "catppuccin/nvim",      name = "catppuccin" },
 
   -- Git related pluginss
@@ -47,6 +46,9 @@ return require('lazy').setup({
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
 
+  -- Multi-line selection
+  'mg979/vim-visual-multi',
+
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
   {
@@ -78,8 +80,9 @@ return require('lazy').setup({
 
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim', opts = {} },
+
+  -- Adds git releated signs to the gutter, as well as utilities for managing changes
   {
-    -- Adds git releated signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
       -- See `:help gitsigns.txt`
@@ -91,15 +94,6 @@ return require('lazy').setup({
         changedelete = { text = '~' },
       },
     },
-  },
-
-  {
-    -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'onedark'
-    end,
   },
 
   {
@@ -167,6 +161,8 @@ return require('lazy').setup({
       "nvim-telescope/telescope.nvim"
     }
   }
+
+
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
