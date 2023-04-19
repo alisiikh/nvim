@@ -41,6 +41,63 @@ local lsp_group = vim.api.nvim_create_augroup("lsp", { clear = true })
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
+-- Setup neovim lua configuration
+require('neodev').setup()
+
+-- Setup mason so it can manage external tooling
+require('mason').setup()
+
+
+-- Ensure the servers above are installed
+local mason_lspconfig = require('mason-lspconfig')
+
+-- Enable the following language servers
+--  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
+--
+--  Add any additional override configuration in the following tables. They will be passed to
+--  the `settings` field of the server config. You must look up that documentation yourself.
+local servers = {
+  -- clangd = {},
+  -- gopls = {},
+  -- pyright = {},
+  rust_analyzer = {},
+  tsserver = {},
+  lua_ls = {
+    Lua = {
+      workspace = { checkThirdParty = false },
+      telemetry = { enable = false },
+    },
+  },
+}
+
+
+mason_lspconfig.setup {
+  ensure_installed = vim.tbl_keys(servers),
+}
+
+mason_lspconfig.setup_handlers {
+  function(server_name)
+    -- LSP settings.
+    --  This function gets run when an LSP connects to a particular buffer.
+    local on_attach = function(_, bufnr)
+      -- NOTE: Remember that lua is a real programming language, and as such it is possible
+      -- to define small helper and utility functions so you don't have to repeat yourself
+      -- many times.
+      --
+      -- In this case, we create a function that lets us more easily define mappings specific
+      -- for LSP related items. It sets the mode, buffer and description for us each time.
+      attach_lsp(bufnr)
+    end
+
+    require('lspconfig')[server_name].setup {
+      capabilities = capabilities,
+      on_attach = on_attach,
+      settings = servers[server_name],
+    }
+  end,
+}
+
+
 -- [[ Scala metals ]]
 -- See `:help metals`???
 local nvim_metals_group = vim.api.nvim_create_augroup("nvim-metals", { clear = true })
@@ -92,7 +149,7 @@ vim.api.nvim_create_autocmd("FileType", {
               { desc = 'metals: reveal in tree' })
             map("n", "<leader>mi", [[<cmd>lua require("metals").toggle_setting("showImplicitArguments")<CR>]],
               { desc = 'metals: show implicit args' })
-            map("n", "<leader>mf", [[<cmd>lua require("metals").organize_imports()<CR>]],
+            map("n", "<leader>mo", [[<cmd>lua require("metals").organize_imports()<CR>]],
               { desc = 'metals: organize imports' })
             map("n", "<leader>mg", [[<cmd>lua require("metals").goto_location()<CR>]],
               { desc = 'metals: goto location' })
@@ -158,15 +215,6 @@ vim.api.nvim_create_autocmd("FileType", {
               },
             }
 
-            map("n", "<leader>dc", [[<cmd>lua require("dap").continue()<CR>]], { desc = 'dap: continue' })
-            map("n", "<leader>dr", [[<cmd>lua require("dap").repl.toggle()<CR>]], { desc = 'dap: repl toggle' })
-            map("n", "<leader>dK", [[<cmd>lua require("dap.ui.widgets").hover()<CR>]], { desc = 'dap: hover' })
-            map("n", "<leader>dt", [[<cmd>lua require("dap").toggle_breakpoint()<CR>]],
-              { desc = 'dap: toggle breakpoint' })
-            map("n", "<leader>dso", [[<cmd>lua require("dap").step_over()<CR>]], { desc = 'dap: step over' })
-            map("n", "<leader>dsi", [[<cmd>lua require("dap").step_into()<CR>]], { desc = 'dap: step into' })
-            map("n", "<leader>drl", [[<cmd>lua require("dap").run_last()<CR>]], { desc = 'dap: run last' })
-
             dap.listeners.after["event_terminated"]["nvim-metals"] = function(session, body)
               dap.repl.open()
             end
@@ -180,10 +228,11 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 
-require('rust-tools').setup({
+local rt = require('rust-tools')
+
+rt.setup({
   server = {
     on_attach = function(_, bufnr)
-      local rt = require("rust-tools")
       -- Hover actions
       vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
       -- Code action groups
@@ -192,57 +241,3 @@ require('rust-tools').setup({
   }
 })
 
--- Enable the following language servers
---  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
---
---  Add any additional override configuration in the following tables. They will be passed to
---  the `settings` field of the server config. You must look up that documentation yourself.
-local servers = {
-  -- clangd = {},
-  -- gopls = {},
-  -- pyright = {},
-  rust_analyzer = {},
-  tsserver = {},
-  lua_ls = {
-    Lua = {
-      workspace = { checkThirdParty = false },
-      telemetry = { enable = false },
-    },
-  },
-}
-
--- Setup neovim lua configuration
-require('neodev').setup()
-
--- Setup mason so it can manage external tooling
-require('mason').setup()
-
-
--- Ensure the servers above are installed
-local mason_lspconfig = require('mason-lspconfig')
-
-mason_lspconfig.setup {
-  ensure_installed = vim.tbl_keys(servers),
-}
-
-mason_lspconfig.setup_handlers {
-  function(server_name)
-    -- LSP settings.
-    --  This function gets run when an LSP connects to a particular buffer.
-    local on_attach = function(_, bufnr)
-      -- NOTE: Remember that lua is a real programming language, and as such it is possible
-      -- to define small helper and utility functions so you don't have to repeat yourself
-      -- many times.
-      --
-      -- In this case, we create a function that lets us more easily define mappings specific
-      -- for LSP related items. It sets the mode, buffer and description for us each time.
-      attach_lsp(bufnr)
-    end
-
-    require('lspconfig')[server_name].setup {
-      capabilities = capabilities,
-      on_attach = on_attach,
-      settings = servers[server_name],
-    }
-  end,
-}

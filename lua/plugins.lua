@@ -1,7 +1,7 @@
 return require('lazy').setup({
 
   -- Catppuccin theme
-  { "catppuccin/nvim",      name = "catppuccin" },
+  { "catppuccin/nvim",                 name = "catppuccin" },
 
   -- Git related pluginss
   'tpope/vim-fugitive',
@@ -69,11 +69,24 @@ return require('lazy').setup({
       { 'j-hui/fidget.nvim',                 opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
-      'folke/neodev.nvim',
+      {
+        'folke/neodev.nvim',
+        opts = {
+          library = {
+            plugins = {
+              "nvim-dap-ui"
+            },
+            types = true
+          }
+        }
+      },
     },
   },
 
-  'simrat39/rust-tools.nvim',
+  'nvim-lua/plenary.nvim',
+  { 'theHamsta/nvim-dap-virtual-text', opts = {} },
+  { "rcarriga/nvim-dap-ui",            dependencies = { "mfussenegger/nvim-dap" } },
+  { 'simrat39/rust-tools.nvim',        dependencies = { 'nvim-lua/plenary.nvim' } },
 
   {
     -- Autocompletion
@@ -82,7 +95,7 @@ return require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim',          opts = {} },
 
   -- Adds git releated signs to the gutter, as well as utilities for managing changes
   {

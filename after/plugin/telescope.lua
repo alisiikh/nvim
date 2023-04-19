@@ -5,14 +5,14 @@ end
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
 require('telescope').setup {
-  defaults = {
-    mappings = {
-      i = {
-        ['<C-u>'] = false,
-        ['<C-d>'] = false,
-      },
-    },
-  },
+	defaults = {
+		mappings = {
+			i = {
+				['<C-u>'] = false,
+				['<C-d>'] = false,
+			},
+		},
+	},
 }
 
 -- Enable telescope fzf native, if installed
@@ -38,5 +38,3 @@ map('n', '<leader>sh', telescope.help_tags, { desc = '[s]earch [h]elp' })
 map('n', '<leader>sw', telescope.grep_string, { desc = '[s]earch current [w]ord' })
 map('n', '<leader>sg', telescope.live_grep, { desc = '[s]earch by [g]rep' })
 map('n', '<leader>sd', telescope.diagnostics, { desc = '[s]earch [d]iagnostics' })
-
-
