@@ -61,7 +61,7 @@ return require('lazy').setup({
       -- Automatically install LSPs to stdpath for neovim
       'williamboman/mason.nvim',
       { 'williamboman/mason-lspconfig.nvim', opts = { 'lua_ls', 'rust-analyzer' } },
-      { 'jay-babu/mason-null-ls.nvim',       opts = { 'prettier', 'stylua', 'rustfmt' } },
+      -- { 'jay-babu/mason-null-ls.nvim',       opts = { 'prettier', 'stylua', 'rustfmt' } },
       { 'jay-babu/mason-nvim-dap.nvim',      opts = {} },
 
       -- Useful status updates for LSP
@@ -118,8 +118,8 @@ return require('lazy').setup({
     -- See `:help lualine.txt`
     opts = {
       options = {
-        icons_enabled = false,
-        theme = 'onedark',
+        icons_enabled = true,
+        theme = 'catppuccin',
         component_separators = '|',
         section_separators = '',
       },
@@ -138,7 +138,7 @@ return require('lazy').setup({
   },
 
   -- "gc" to comment visual regions/lines
-  'numToStr/Comment.nvim',
+  { 'numToStr/Comment.nvim',         opts = {} },
 
   -- Fuzzy Finder (files, lsp, etc)
   { 'nvim-telescope/telescope.nvim', version = '*', dependencies = { 'nvim-lua/plenary.nvim' } },

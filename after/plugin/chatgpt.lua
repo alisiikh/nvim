@@ -17,14 +17,14 @@ gpt.setup({
   },
 })
 
-local function map(mode, lhs, rhs, desc)
-  if (desc) then
-    desc = "gpt: " .. desc
-  end
 
-  vim.keymap.set(mode, lhs, rhs, { desc = desc, silent = true })
-end
+local wk = require('which-key')
 
-map('n', '<leader>gg', gpt.openChat, 'open chat')
-map('v', '<leader>ge', gpt.edit_with_instructions, 'edit with instructions')
-map('n', '<leader>ga', gpt.selectAwesomePrompt, 'act as')
+wk.register({
+  g = {
+    name = 'gpt',
+    g = { gpt.openChat, "gpt: open chat" },
+    e = { gpt.edit_with_instructions, "gpt: edit with instructions" },
+    a = { gpt.selectAwesomePrompt, "gpt: act as" },
+  },
+}, { prefix = '<leader>' })

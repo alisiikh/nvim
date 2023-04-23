@@ -15,7 +15,6 @@ if not vim.loop.fs_stat(lazypath) then
     'https://github.com/folke/lazy.nvim.git',
     '--branch=stable', -- latest stable release
     lazypath,
-
   }
 end
 vim.opt.rtp:prepend(lazypath)
@@ -23,6 +22,7 @@ vim.opt.rtp:prepend(lazypath)
 require('settings')
 require('plugins')
 require('mappings')
+
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -44,6 +44,7 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
     vim.fn.setpos(".", cursor)
   end,
 })
+
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

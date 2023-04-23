@@ -1,6 +1,12 @@
+vim.diagnostic.config {
+  virtual_text = true
+}
+
 local dap = require('dap')
 local dapui = require('dapui')
 local dap_widgets = require('dap.ui.widgets')
+
+dapui.setup {}
 
 local function map(n, keys, cmd, opts)
   vim.keymap.set(n, keys, cmd, opts)
@@ -15,4 +21,8 @@ map("n", "<leader>b", dap.toggle_breakpoint, { desc = 'dap: toggle breakpoint' }
 map("n", "<leader>dK", dap_widgets.hover, { desc = 'dap: hover' })
 -- map("n", "<leader>drl", dap.run_last, { desc = 'dap: run last' })
 
-dapui.setup {}
+local sign = vim.fn.sign_define
+
+sign("DapBreakpoint", { text = "●", texthl = "DapBreakpoint", linehl = "", numhl = ""})
+sign("DapBreakpointCondition", { text = "●", texthl = "DapBreakpointCondition", linehl = "", numhl = ""})
+sign("DapLogPoint", { text = "◆", texthl = "DapLogPoint", linehl = "", numhl = ""})

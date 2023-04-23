@@ -24,8 +24,8 @@ function attach_lsp(bufnr)
 
   -- Lesser used LSP functionality
   nmap('gD', vim.lsp.buf.declaration, '[g]oto [d]eclaration')
-  nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[w]orkspace [a]dd Folder')
-  nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[w]orkspace [r]emove Folder')
+  nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[w]orkspace [a]dd folder')
+  nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[w]orkspace [r]emove folder')
   nmap('<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end,
     '[w]orkspace [l]ist folders')
 
@@ -137,90 +137,90 @@ vim.api.nvim_create_autocmd("FileType", {
         statusBarProvider = "on",
       },
       capabilities = capabilities,
-      on_attach =          function(client, bufnr)
-            -- Metals specific mappings
-            map("v", "<leader>mt", [[<Esc><cmd>lua require("metals").type_of_range()<CR>]],
-              { desc = 'metals: see type of range' })
-            map("n", "<leader>mw", [[<cmd>lua require("metals").hover_worksheet({ border = "single" })<CR>]],
-              { desc = 'metals: hover worksheet' })
-            map("n", "<leader>mv", [[<cmd>lua require("metals.tvp").toggle_tree_view()<CR>]],
-              { desc = 'metals: toggle tree view' })
-            map("n", "<leader>mr", [[<cmd>lua require("metals.tvp").reveal_in_tree()<CR>]],
-              { desc = 'metals: reveal in tree' })
-            map("n", "<leader>mi", [[<cmd>lua require("metals").toggle_setting("showImplicitArguments")<CR>]],
-              { desc = 'metals: show implicit args' })
-            map("n", "<leader>mo", [[<cmd>lua require("metals").organize_imports()<CR>]],
-              { desc = 'metals: organize imports' })
-            map("n", "<leader>mg", [[<cmd>lua require("metals").goto_location()<CR>]],
-              { desc = 'metals: goto location' })
-            map("n", "<leader>md", [[<cmd>lua require("metals").implementation_location()<CR>]],
-              { desc = 'metals: implementation location' })
+      on_attach = function(client, bufnr)
+        -- Metals specific mappings
+        map("v", "<leader>mt", [[<Esc><cmd>lua require("metals").type_of_range()<CR>]],
+          { desc = 'metals: see type of range' })
+        map("n", "<leader>mw", [[<cmd>lua require("metals").hover_worksheet({ border = "single" })<CR>]],
+          { desc = 'metals: hover worksheet' })
+        map("n", "<leader>mv", [[<cmd>lua require("metals.tvp").toggle_tree_view()<CR>]],
+          { desc = 'metals: toggle tree view' })
+        map("n", "<leader>mr", [[<cmd>lua require("metals.tvp").reveal_in_tree()<CR>]],
+          { desc = 'metals: reveal in tree' })
+        map("n", "<leader>mi", [[<cmd>lua require("metals").toggle_setting("showImplicitArguments")<CR>]],
+          { desc = 'metals: show implicit args' })
+        map("n", "<leader>mo", [[<cmd>lua require("metals").organize_imports()<CR>]],
+          { desc = 'metals: organize imports' })
+        map("n", "<leader>mg", [[<cmd>lua require("metals").goto_location()<CR>]],
+          { desc = 'metals: goto location' })
+        map("n", "<leader>md", [[<cmd>lua require("metals").implementation_location()<CR>]],
+          { desc = 'metals: implementation location' })
 
-            attach_lsp(bufnr)
+        attach_lsp(bufnr)
 
-            vim.api.nvim_create_autocmd("CursorHold", {
-              callback = vim.lsp.buf.document_highlight,
-              buffer = bufnr,
-              group = lsp_group,
-            })
-            vim.api.nvim_create_autocmd("CursorMoved", {
-              callback = vim.lsp.buf.clear_references,
-              buffer = bufnr,
-              group = lsp_group,
-            })
-            vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
-              callback = vim.lsp.codelens.refresh,
-              buffer = bufnr,
-              group = lsp_group,
-            })
-            vim.api.nvim_create_autocmd("FileType", {
-              pattern = { "dap-repl" },
-              callback = function()
-                require("dap.ext.autocompl").attach()
+        vim.api.nvim_create_autocmd("CursorHold", {
+          callback = vim.lsp.buf.document_highlight,
+          buffer = bufnr,
+          group = lsp_group,
+        })
+        vim.api.nvim_create_autocmd("CursorMoved", {
+          callback = vim.lsp.buf.clear_references,
+          buffer = bufnr,
+          group = lsp_group,
+        })
+        vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
+          callback = vim.lsp.codelens.refresh,
+          buffer = bufnr,
+          group = lsp_group,
+        })
+        vim.api.nvim_create_autocmd("FileType", {
+          pattern = { "dap-repl" },
+          callback = function()
+            require("dap.ext.autocompl").attach()
+          end,
+          group = lsp_group,
+        })
+
+        -- nvim-dap
+        local dap = require("dap")
+
+        dap.configurations.scala = {
+          {
+            type = "scala",
+            request = "launch",
+            name = "Run or test with input",
+            metals = {
+              runType = "runOrTestFile",
+              args = function()
+                local args_string = vim.fn.input("Arguments: ")
+                return vim.split(args_string, " +")
               end,
-              group = lsp_group,
-            })
+            },
+          },
+          {
+            type = "scala",
+            request = "launch",
+            name = "Run or Test",
+            metals = {
+              runType = "runOrTestFile",
+            },
+          },
+          {
+            type = "scala",
+            request = "launch",
+            name = "Test Target",
+            metals = {
+              runType = "testTarget",
+            },
+          },
+        }
 
-            -- nvim-dap
-            local dap = require("dap")
+        dap.listeners.after["event_terminated"]["nvim-metals"] = function(session, body)
+          dap.repl.open()
+        end
 
-            dap.configurations.scala = {
-              {
-                type = "scala",
-                request = "launch",
-                name = "Run or test with input",
-                metals = {
-                  runType = "runOrTestFile",
-                  args = function()
-                    local args_string = vim.fn.input("Arguments: ")
-                    return vim.split(args_string, " +")
-                  end,
-                },
-              },
-              {
-                type = "scala",
-                request = "launch",
-                name = "Run or Test",
-                metals = {
-                  runType = "runOrTestFile",
-                },
-              },
-              {
-                type = "scala",
-                request = "launch",
-                name = "Test Target",
-                metals = {
-                  runType = "testTarget",
-                },
-              },
-            }
-
-            dap.listeners.after["event_terminated"]["nvim-metals"] = function(session, body)
-              dap.repl.open()
-            end
-
-            require("metals").setup_dap()
-          end
+        require("metals").setup_dap()
+      end
     }
 
     require("metals").initialize_or_attach(metals_config)
@@ -230,6 +230,12 @@ vim.api.nvim_create_autocmd("FileType", {
 
 local rt = require('rust-tools')
 
+
+-- Info on how to setup rust debugging: https://github.com/BrendanNolan/nvim/blob/master/after/plugin/lsp.lua
+-- local extension_path = vim.env.HOME .. vim.env.LLDB_PATH -- /.vscode/extensions/vadimcn.vscode-lldb-1.9.0/
+-- local codelldb_path = extension_path .. '/adapter/codelldb'
+-- local liblldb_path = extension_path .. '/lldb/lib/liblldb.so'
+
 rt.setup({
   server = {
     on_attach = function(_, bufnr)
@@ -238,6 +244,6 @@ rt.setup({
       -- Code action groups
       vim.keymap.set("n", "<leader>ca", rt.code_action_group.code_action_group, { buffer = bufnr })
     end,
-  }
+  },
+  capabilities = capabilities,
 })
-
