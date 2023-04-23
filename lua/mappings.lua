@@ -1,8 +1,9 @@
 local map = require("helpers").map
 
--- Keymaps for better default experience
--- See `:help vim.keymap.set()`
-map({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
+-- Make sure Space is not mapped to anything, used as leader key
+map({ 'n', 'v' }, '<Space>', '<nop>', { silent = true })
+-- Shift Q to do nothing, avoid weirdness
+map('n', 'Q', '<nop>')
 
 -- Save work and quit
 map('n', '<C-q>', ':wqa<CR>', { desc = 'save & quit' })
@@ -15,36 +16,29 @@ map('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 map('n', 'J', 'mzJ`z')
 
 -- Move things between statements
-map('v', 'J', ":m '>+1<CR>gv=gv")
-map('v', 'K', ":m '<-2<CR>gv=gv")
+map('v', 'J', ":m '>+1<CR>gv=gv", { desc = 'move selection down btw statements' })
+map('v', 'K', ":m '<-2<CR>gv=gv", { desc = 'move selection up btw statements' })
 
 -- Keep cursor in the middle when moving half page up/down
-map('n', '<C-d>', '<C-d>zz')
-map('n', '<C-u>', '<C-u>zz')
+map('n', '<C-d>', '<C-d>zz', { desc = 'jump half page down' })
+map('n', '<C-u>', '<C-u>zz', { desc = 'jump half page up' })
 
 -- Cursor in the middle during searches
-map('n', 'n', 'nzzzv')
-map('n', 'N', 'Nzzzv')
+map('n', 'n', 'nzzzv', { desc = 'jump to next match item' })
+map('n', 'N', 'Nzzzv', { desc = 'jump to prev match item' })
+
 
 -- cut into the copy buffer and paste keeping the buffer
 map('x', '<leader>p', "\"_dP")
 
--- copy into system clipboard, use y not to (useful for copying outside of vim context)
-map('n', '<leader>y', "\"+y")
-map('v', '<leader>y', "\"+y")
-map('n', '<leader>Y', "\"+Y")
+-- copy into system clipboard, (useful for copying outside of vim context)
+map({ 'n', 'v' }, '<leader>y', "\"+y", { desc = 'copy to blackhole register' })
+map('n', '<leader>Y', "\"+Y", { desc = 'copy line to blackhole register' })
+map({ 'n', 'v' }, '<leader>d', "\"_d", { desc = 'cut to blackhole register' })
 
-map('n', '<leader>d', "\"_d")
-map('v', '<leader>d', "\"_d")
-
-map('n', 'Q', '<nop>')
 
 -- Diagnostic keymaps
 map("n", "<C-[>", vim.diagnostic.goto_prev, { desc = 'diagnostic: prev error msg' })
 map("n", "<C-]>", vim.diagnostic.goto_next, { desc = 'diagnostic: next error msg' })
 map('n', '<leader>E', vim.diagnostic.open_float, { desc = "open floating diagnostic message" })
 map('n', '<leader>q', vim.diagnostic.setloclist, { desc = "open diagnostics list" })
-
--- Git
--- map('n', '<leader>g', ':G<CR>', { desc = 'Git' })
-

@@ -6,7 +6,7 @@ vim.g.loaded_netrwPlugin = 1
 local opt = require('helpers').opt
 
 -- Keep cursor always in the middle when possible
-opt('o', 'scrolloff', 999)
+opt('o', 'so', 999)
 
 -- See `:help vim.o`
 -- Set highlight on search
