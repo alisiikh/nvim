@@ -9,4 +9,4 @@ tree.setup {
 
 local nmap = require('helpers').nmap
 
-nmap('<leader>o', api.tree.toggle, { desc = 'nvim-tree: Toggle', noremap = true })
+nmap('<leader>o', api.tree.toggle, { desc = 'nvim-tree: toggle', noremap = true })
