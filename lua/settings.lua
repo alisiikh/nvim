@@ -51,6 +51,7 @@ vim.o.completeopt = 'menuone,noinsert,noselect'
 
 -- avoid excessive messages
 vim.opt.shortmess:append('c')
+vim.opt.shortmess:remove('F')
 
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true

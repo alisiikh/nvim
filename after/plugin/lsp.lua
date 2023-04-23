@@ -35,12 +35,6 @@ function attach_lsp(bufnr)
   end, { desc = 'lsp: format code' })
 end
 
-local lsp_group = vim.api.nvim_create_augroup("lsp", { clear = true })
-
--- nvim-cmp supports additional completion capabilities, so broadcast that to servers
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
-
 -- Setup neovim lua configuration
 require('neodev').setup()
 
@@ -48,6 +42,12 @@ require('neodev').setup()
 require('mason').setup()
 
 
+local lsp_group = vim.api.nvim_create_augroup("lsp", { clear = true })
+
+-- nvim-cmp supports additional completion capabilities, so broadcast that to servers
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+capabilities.textDocument.completion.completionItem.snippetSupport = true
 -- Ensure the servers above are installed
 local mason_lspconfig = require('mason-lspconfig')
 
@@ -113,6 +113,7 @@ vim.api.nvim_create_autocmd("FileType", {
       vim.api.nvim_set_keymap(mode, lhs, rhs, options)
     end
 
+    local metals = require("metals")
     local metals_config = require("metals").bare_config()
     metals_config = {
       tvp = {
@@ -155,6 +156,8 @@ vim.api.nvim_create_autocmd("FileType", {
           { desc = 'metals: goto location' })
         map("n", "<leader>md", [[<cmd>lua require("metals").implementation_location()<CR>]],
           { desc = 'metals: implementation location' })
+        map("n", "<leader>mi", [[<cmd>lua require("metals").import_build()<CR>]],
+          { desc = 'metals: import build' })
 
         attach_lsp(bufnr)
 
@@ -219,11 +222,11 @@ vim.api.nvim_create_autocmd("FileType", {
           dap.repl.open()
         end
 
-        require("metals").setup_dap()
+        metals.setup_dap()
       end
     }
 
-    require("metals").initialize_or_attach(metals_config)
+    metals.initialize_or_attach(metals_config)
   end,
 })
 
