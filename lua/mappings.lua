@@ -1,12 +1,8 @@
-local function map(n, keys, cmd, opts)
-    vim.keymap.set(n, keys, cmd, opts)
-end
+local map = require("helpers").map
 
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
 map({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
-
-map('n', '<leader>o', ':NvimTreeToggle<CR>', { desc = 'nvim-tree: Toggle', noremap = true })
 
 -- Remap for dealing with word wrap
 map('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
@@ -41,8 +37,8 @@ map('v', '<leader>d', "\"_d")
 map('n', 'Q', '<nop>')
 
 -- Diagnostic keymaps
-map('n', '[d', vim.diagnostic.goto_prev, { desc = "jump prev diagnostic message" })
-map('n', ']d', vim.diagnostic.goto_next, { desc = "jump next diagnostic message" })
+map("n", "<C-[>", vim.diagnostic.goto_prev, { desc = 'diagnostic: prev error msg' })
+map("n", "<C-]>", vim.diagnostic.goto_next, { desc = 'diagnostic: next error msg' })
 map('n', '<leader>E', vim.diagnostic.open_float, { desc = "open floating diagnostic message" })
 map('n', '<leader>q', vim.diagnostic.setloclist, { desc = "open diagnostics list" })
 

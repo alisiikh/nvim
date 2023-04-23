@@ -18,13 +18,8 @@ gpt.setup({
 })
 
 
-local wk = require('which-key')
+local map = require('helpers').map
 
-wk.register({
-  g = {
-    name = 'gpt',
-    g = { gpt.openChat, "gpt: open chat" },
-    e = { gpt.edit_with_instructions, "gpt: edit with instructions" },
-    a = { gpt.selectAwesomePrompt, "gpt: act as" },
-  },
-}, { prefix = '<leader>' })
+map('n', '<leader>gg', gpt.openChat, { desc = 'gpt: open chat' })
+map('v', '<leader>ge', gpt.edit_with_instructions, { desc = 'gpt: edit with instructions' })
+map('n', '<leader>ga', gpt.selectAwesomePrompt, { desc = 'gpt: act as' })

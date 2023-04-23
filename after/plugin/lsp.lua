@@ -1,11 +1,7 @@
-function attach_lsp(bufnr)
-  local nmap = function(keys, func, desc)
-    if desc then
-      desc = 'lsp: ' .. desc
-    end
-    vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
+local function attach_lsp(bufnr)
+  local function nmap(lhs, rhs, desc)
+    require('helpers').nmap(lhs, rhs, { buffer = bufnr, desc = 'lsp: ' .. desc })
   end
-
 
   nmap('<leader>cr', vim.lsp.buf.rename, '[r]e[n]ame')
   nmap('<leader>ca', vim.lsp.buf.code_action, '[c]ode [a]ction')
@@ -84,7 +80,7 @@ mason_lspconfig.setup_handlers {
       -- to define small helper and utility functions so you don't have to repeat yourself
       -- many times.
       --
-      -- In this case, we create a function that lets us more easily define mappings specific
+      -- In this case, we create a function that lets us more easily define local mappings specific
       -- for LSP related items. It sets the mode, buffer and description for us each time.
       attach_lsp(bufnr)
     end
@@ -110,7 +106,8 @@ vim.api.nvim_create_autocmd("FileType", {
       if opts then
         options = vim.tbl_extend("force", options, opts)
       end
-      vim.api.nvim_set_keymap(mode, lhs, rhs, options)
+
+      require('helpers').map(mode, lhs, rhs, options)
     end
 
     local metals = require("metals")
@@ -191,7 +188,15 @@ vim.api.nvim_create_autocmd("FileType", {
           {
             type = "scala",
             request = "launch",
-            name = "Run or test with input",
+            name = "Run or test",
+            metals = {
+              runType = "runOrTestFile",
+            },
+          },
+          {
+            type = "scala",
+            request = "launch",
+            name = "Run or test (+args)",
             metals = {
               runType = "runOrTestFile",
               args = function()
@@ -203,15 +208,7 @@ vim.api.nvim_create_autocmd("FileType", {
           {
             type = "scala",
             request = "launch",
-            name = "Run or Test",
-            metals = {
-              runType = "runOrTestFile",
-            },
-          },
-          {
-            type = "scala",
-            request = "launch",
-            name = "Test Target",
+            name = "Test",
             metals = {
               runType = "testTarget",
             },
@@ -242,10 +239,12 @@ local rt = require('rust-tools')
 rt.setup({
   server = {
     on_attach = function(_, bufnr)
-      -- Hover actions
-      vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
+      local nmap = require('helpers').nmap
+
+      -- Hover actions (Run / Debug)
+      nmap("<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr, noremap = true })
       -- Code action groups
-      vim.keymap.set("n", "<leader>ca", rt.code_action_group.code_action_group, { buffer = bufnr })
+      nmap("<leader>ca", rt.code_action_group.code_action_group, { buffer = bufnr, noremap = true })
     end,
   },
   capabilities = capabilities,

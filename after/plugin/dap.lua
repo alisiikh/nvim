@@ -8,19 +8,11 @@ local dap_widgets = require('dap.ui.widgets')
 
 dapui.setup {}
 
-dap.listeners.after.event_initialized["dapui_config"] = function()
-  dapui.open()
-end
-dap.listeners.before.event_terminated["dapui_config"] = function()
-  dapui.close()
-end
-dap.listeners.before.event_exited["dapui_config"] = function()
-  dapui.close()
-end
+dap.listeners.after.event_initialized["dapui_config"] = function() dapui.open() end
+dap.listeners.before.event_terminated["dapui_config"] = function() dapui.close() end
+dap.listeners.before.event_exited["dapui_config"] = function() dapui.close() end
 
-local function map(n, keys, cmd, opts)
-  vim.keymap.set(n, keys, cmd, opts)
-end
+local map = require('helpers').map
 
 map("n", "<F4>", dap.toggle_breakpoint, { desc = 'dap: toggle breakpoint' })
 map("n", "<F5>", dap.continue, { desc = 'dap: continue' })

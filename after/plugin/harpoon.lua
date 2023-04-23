@@ -1,15 +1,14 @@
 local mark = require('harpoon.mark')
 local ui = require('harpoon.ui')
 
-local function map(n, key, f, desc)
+local function nmap(lhs, rhs, desc)
   if desc then
     desc = 'harpoon: ' .. desc
   end
-  vim.keymap.set(n, key, f, { desc = desc })
+  require('helpers').nmap(lhs, rhs, { desc = desc })
 end
 
-map('n', '<leader>h', ui.toggle_quick_menu, 'toggle quick menu')
-map('n', '<leader>a', mark.add_file, 'add file')
-map('n', '<C-h>', ui.nav_prev, 'prev file')
-map('n', '<C-l>', ui.nav_next, 'next file')
-
+nmap('<leader>h', ui.toggle_quick_menu, 'toggle quick menu')
+nmap('<leader>a', mark.add_file, 'add file')
+nmap('<C-h>', ui.nav_prev, 'prev file')
+nmap('<C-l>', ui.nav_next, 'next file')
