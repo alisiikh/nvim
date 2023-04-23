@@ -37,6 +37,8 @@ return require('lazy').setup({
     end,
   },
 
+  'nvim-lua/plenary.nvim',
+
   -- Scala metals
   {
     'scalameta/nvim-metals',
@@ -61,7 +63,7 @@ return require('lazy').setup({
       -- Automatically install LSPs to stdpath for neovim
       'williamboman/mason.nvim',
       { 'williamboman/mason-lspconfig.nvim', opts = { 'lua_ls', 'rust-analyzer' } },
-      { 'jay-babu/mason-null-ls.nvim',       opts = { 'prettier', 'stylua', 'rustfmt' } },
+      { 'jay-babu/mason-null-ls.nvim',       opts = { 'prettier', 'stylua', } },
       { 'jay-babu/mason-nvim-dap.nvim',      opts = {} },
 
       -- Useful status updates for LSP
@@ -83,7 +85,6 @@ return require('lazy').setup({
     },
   },
 
-  'nvim-lua/plenary.nvim',
   { 'theHamsta/nvim-dap-virtual-text', opts = {} },
   { "rcarriga/nvim-dap-ui",            dependencies = { "mfussenegger/nvim-dap" } },
   { 'simrat39/rust-tools.nvim',        dependencies = { 'nvim-lua/plenary.nvim' } },
@@ -95,36 +96,13 @@ return require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim',          opts = {} },
+  'folke/which-key.nvim',
 
   -- Adds git releated signs to the gutter, as well as utilities for managing changes
-  {
-    'lewis6991/gitsigns.nvim',
-    opts = {
-      -- See `:help gitsigns.txt`
-      signs = {
-        add = { text = '+' },
-        change = { text = '~' },
-        delete = { text = '_' },
-        topdelete = { text = '‾' },
-        changedelete = { text = '~' },
-      },
-    },
-  },
+  'lewis6991/gitsigns.nvim',
 
-  {
-    -- Set lualine as statusline
-    'nvim-lualine/lualine.nvim',
-    -- See `:help lualine.txt`
-    opts = {
-      options = {
-        icons_enabled = true,
-        theme = 'catppuccin',
-        component_separators = '|',
-        section_separators = '',
-      },
-    },
-  },
+  -- Set lualine as statusline
+  'nvim-lualine/lualine.nvim',
 
   {
     -- Add indentation guides even on blank lines
