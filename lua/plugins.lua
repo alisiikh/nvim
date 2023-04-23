@@ -63,8 +63,8 @@ return require('lazy').setup({
       -- Automatically install LSPs to stdpath for neovim
       'williamboman/mason.nvim',
       { 'williamboman/mason-lspconfig.nvim', opts = { 'lua_ls', 'rust-analyzer' } },
-      { 'jay-babu/mason-null-ls.nvim',       opts = { 'prettier', 'stylua', } },
-      { 'jay-babu/mason-nvim-dap.nvim',      opts = {} },
+      { 'jay-babu/mason-null-ls.nvim',       opts = { 'prettier', 'stylua', 'rustfmt' } },
+      { 'jay-babu/mason-nvim-dap.nvim',      opts = { 'codelldb' } },
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`

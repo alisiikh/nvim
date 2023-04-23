@@ -215,7 +215,7 @@ vim.api.nvim_create_autocmd("FileType", {
           },
         }
 
-        dap.listeners.after["event_terminated"]["nvim-metals"] = function(session, body)
+        dap.listeners.after["event_terminated"]["nvim-metals"] = function(_, _)
           dap.repl.open()
         end
 
@@ -228,14 +228,14 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 
+
+local mason_registry = require("mason-registry")
+
+local codelldb_root = mason_registry.get_package("codelldb"):get_install_path() .. "/extension/"
+local codelldb_path = codelldb_root .. "adapter/codelldb"
+local liblldb_path = codelldb_root .. "lldb/lib/liblldb.dylib"
+
 local rt = require('rust-tools')
-
-
--- Info on how to setup rust debugging: https://github.com/BrendanNolan/nvim/blob/master/after/plugin/lsp.lua
--- local extension_path = vim.env.HOME .. vim.env.LLDB_PATH -- /.vscode/extensions/vadimcn.vscode-lldb-1.9.0/
--- local codelldb_path = extension_path .. '/adapter/codelldb'
--- local liblldb_path = extension_path .. '/lldb/lib/liblldb.so'
-
 rt.setup({
   server = {
     on_attach = function(_, bufnr)
@@ -248,4 +248,7 @@ rt.setup({
     end,
   },
   capabilities = capabilities,
+  dap = {
+    adapter = require('rust-tools.dap').get_codelldb_adapter(codelldb_path, liblldb_path)
+  }
 })
