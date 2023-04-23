@@ -96,7 +96,7 @@ mason_lspconfig.setup_handlers {
 
 -- [[ Scala metals ]]
 -- See `:help metals`???
-local nvim_metals_group = vim.api.nvim_create_augroup("nvim-metals", { clear = true })
+local nvim_metals_group = vim.api.nvim_create_augroup("metals", { clear = true })
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "scala", "sbt", "java" },
   group = nvim_metals_group,

@@ -2,6 +2,8 @@ local map = require("helpers").map
 
 -- Make sure Space is not mapped to anything, used as leader key
 map({ 'n', 'v' }, '<Space>', '<nop>', { silent = true })
+map('n', '<esc>', '<nop>', { silent = true })
+
 -- Shift Q to do nothing, avoid weirdness
 map('n', 'Q', '<nop>')
 
