@@ -13,7 +13,7 @@ map('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 map('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 -- Cursor in the middle while inserting
-map('n', 'J', 'mzJ`z')
+map('n', 'J', 'mzJ`z', { desc = 'join lines' })
 
 -- Move things between statements
 map('v', 'J', ":m '>+1<CR>gv=gv", { desc = 'move selection down btw statements' })
