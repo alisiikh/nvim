@@ -9,6 +9,6 @@ local function nmap(lhs, rhs, desc)
 end
 
 nmap('<leader>h', ui.toggle_quick_menu, 'toggle quick menu')
-nmap('<leader>a', mark.add_file, 'add file')
-nmap('<C-h>', ui.nav_prev, 'prev file')
-nmap('<C-l>', ui.nav_next, 'next file')
+nmap('<leader>ha', mark.add_file, 'add file')
+nmap('<leader>hH', ui.nav_prev, 'prev file')
+nmap('<leader>hh', ui.nav_next, 'next file')

@@ -40,7 +40,7 @@ map({ 'n', 'v' }, '<leader>d', "\"_d", { desc = 'cut to blackhole register' })
 
 
 -- Diagnostic keymaps
-map("n", "<C-[>", vim.diagnostic.goto_prev, { desc = 'diagnostic: prev error msg' })
-map("n", "<C-]>", vim.diagnostic.goto_next, { desc = 'diagnostic: next error msg' })
+-- map("n", "<C-[>", vim.diagnostic.goto_prev, { desc = 'diagnostic: prev error msg' })
+-- map("n", "<C-]>", vim.diagnostic.goto_next, { desc = 'diagnostic: next error msg' })
 map('n', '<leader>E', vim.diagnostic.open_float, { desc = "open floating diagnostic message" })
 map('n', '<leader>q', vim.diagnostic.setloclist, { desc = "open diagnostics list" })

@@ -17,7 +17,11 @@ vim.opt.rtp:prepend(lazypath)
 return require('lazy').setup({
 
   -- Catppuccin theme
-  { "catppuccin/nvim",                 name = "catppuccin" },
+  { "catppuccin/nvim",                name = "catppuccin" },
+
+
+  -- tmux integration plugin
+  { "christoomey/vim-tmux-navigator", lazy = false },
 
   -- Git related pluginss
   'tpope/vim-fugitive',
@@ -42,7 +46,7 @@ return require('lazy').setup({
           auto_trigger = true,
           debounce = 0,
           keymap = {
-            accept = "§",
+            accept = "<C-g>",
           }
         },
         filetypes = {
@@ -52,8 +56,6 @@ return require('lazy').setup({
       })
     end,
   },
-
-  'nvim-lua/plenary.nvim',
 
   -- Scala metals
   {
@@ -139,8 +141,12 @@ return require('lazy').setup({
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim',         opts = {} },
 
+  -- todo comments highlighting and navigation
+  { 'folke/todo-comments.nvim',      dependencies = { 'nvim-lua/plenary.nvim' }, opts = {} },
+
+
   -- Fuzzy Finder (files, lsp, etc)
-  { 'nvim-telescope/telescope.nvim', version = '*', dependencies = { 'nvim-lua/plenary.nvim' } },
+  { 'nvim-telescope/telescope.nvim', version = '*',                              dependencies = { 'nvim-lua/plenary.nvim' } },
 
   -- Fuzzy Finder Algorithm which requires local dependencies to be built.
   -- Only load if `make` is available. Make sure you have the system
@@ -158,13 +164,18 @@ return require('lazy').setup({
   {
     -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter-textobjects',
-    },
+    dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects', },
     config = function()
       pcall(require('nvim-treesitter.install').update { with_sync = true })
     end,
   },
+  {
+    'nvim-treesitter/nvim-treesitter-context',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    opts = {}
+  },
+
+
 
   -- OpenAI ChatGPT
   {
