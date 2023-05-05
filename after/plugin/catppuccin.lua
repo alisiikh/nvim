@@ -1,4 +1,4 @@
-local catppuccin_flavour = vim.fn.getenv("CATPPUCCIN_FLAVOUR") or "mocha"
+local catppuccin_flavour = vim.fn.getenv("CATPPUCCIN_FLAVOUR") or "macchiato"
 
 require("catppuccin").setup({
   compile_path = vim.fn.stdpath "cache" .. "/catppuccin",

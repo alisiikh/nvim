@@ -14,7 +14,7 @@ map('n', '<C-q>', ':wqa<CR>', { desc = 'save & quit' })
 map('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 map('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
--- Cursor in the middle while inserting
+-- Join lines together
 map('n', 'J', 'mzJ`z', { desc = 'join lines' })
 
 -- Move things between statements
@@ -29,9 +29,8 @@ map('n', '<C-u>', '<C-u>zz', { desc = 'jump half page up' })
 map('n', 'n', 'nzzzv', { desc = 'jump to next match item' })
 map('n', 'N', 'Nzzzv', { desc = 'jump to prev match item' })
 
-
--- cut into the copy buffer and paste keeping the buffer
-map('x', '<leader>p', "\"_dP")
+-- Paste the text and keep it in clipboard while pasting
+map('x', '<leader>p', "\"_dP", { desc = 'paste keeping the clipboard' })
 
 -- copy into system clipboard, (useful for copying outside of vim context)
 map({ 'n', 'v' }, '<leader>y', "\"+y", { desc = 'copy to blackhole register' })

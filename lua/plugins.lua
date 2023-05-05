@@ -60,6 +60,18 @@ return require('lazy').setup({
   -- Multi-line selection
   'mg979/vim-visual-multi',
 
+  -- Smart join lines in blocks
+  {
+    'Wansmer/treesj',
+    keys = {
+      { "U", "<cmd>TSJToggle<cr>", desc = "treesj: toggle" },
+    },
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    opts = {
+      { use_default_keymaps = false },
+    }
+  },
+
   -- Scroll bar on the right to show your posiiton in the file
   {
     'gen740/SmoothCursor.nvim',
