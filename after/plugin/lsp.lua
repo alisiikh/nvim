@@ -3,16 +3,16 @@ local function attach_lsp(bufnr)
     require('helpers').nmap(lhs, rhs, { buffer = bufnr, desc = 'lsp: ' .. desc })
   end
 
-  nmap('<leader>cr', vim.lsp.buf.rename, '[r]e[n]ame')
+  nmap('<leader>cr', vim.lsp.buf.rename, '[r]ename')
   nmap('<leader>ca', vim.lsp.buf.code_action, '[c]ode [a]ction')
   nmap('<leader>cf', vim.lsp.buf.format, '[c]ode [f]ormat')
 
   nmap('gd', vim.lsp.buf.definition, '[g]oto [d]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[g]oto [r]eferences')
   nmap('gI', vim.lsp.buf.implementation, '[g]oto [i]mplementation')
-  nmap('<leader>td', vim.lsp.buf.type_definition, '[t]ype [d]efinition')
-  nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[d]ocument [s]ymbols')
-  nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[w]orkspace [s]ymbols')
+  nmap('<leader>ctd', vim.lsp.buf.type_definition, '[t]ype [d]efinition')
+  nmap('<leader>cds', require('telescope.builtin').lsp_document_symbols, '[d]ocument [s]ymbols')
+  nmap('<leader>cws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[w]orkspace [s]ymbols')
 
   -- See `:help K` for why this keymap
   nmap('Q', vim.lsp.buf.hover, 'hover documentation')

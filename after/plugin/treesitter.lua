@@ -14,7 +14,7 @@ require('nvim-treesitter.configs').setup {
     keymaps = {
       init_selection = '<C-space>',
       node_incremental = '<C-space>',
-      scope_incremental = '<C-s>', -- TODO: this is occupied by tmux
+      scope_incremental = '<C-s>',    -- TODO: this is occupied by tmux
       node_decremental = '<M-space>', -- TODO: Meta key is used by OSX
     },
   },
@@ -32,9 +32,18 @@ require('nvim-treesitter.configs').setup {
         ['ic'] = '@class.inner',
       },
     },
+    swap = {
+      enable = true,
+      swap_previous = {
+        ['[p'] = '@parameter.inner',
+      },
+      swap_next = {
+        [']p'] = '@parameter.inner',
+      },
+    },
     move = {
       enable = true,
-      set_jumps = true, -- whether to set jumps in the jumplist
+      set_jumps = true,
       goto_next_start = {
         [']m'] = '@function.outer',
         [']]'] = '@class.outer',
@@ -52,15 +61,5 @@ require('nvim-treesitter.configs').setup {
         ['[]'] = '@class.outer',
       },
     },
-    swap = {
-      enable = true,
-      swap_next = {
-        ['<leader>pp'] = '@parameter.inner',
-      },
-      swap_previous = {
-        ['<leader>pP'] = '@parameter.inner',
-      },
-    },
   },
 }
-
