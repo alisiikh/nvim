@@ -32,15 +32,6 @@ require('nvim-treesitter.configs').setup {
         ['ic'] = '@class.inner',
       },
     },
-    swap = {
-      enable = true,
-      swap_previous = {
-        ['[p'] = '@parameter.inner',
-      },
-      swap_next = {
-        [']p'] = '@parameter.inner',
-      },
-    },
     move = {
       enable = true,
       set_jumps = true,
@@ -59,6 +50,15 @@ require('nvim-treesitter.configs').setup {
       goto_previous_end = {
         ['[M'] = '@function.outer',
         ['[]'] = '@class.outer',
+      },
+    },
+    swap = {
+      enable = true,
+      swap_previous = {
+        ['[p'] = '@parameter.inner',
+      },
+      swap_next = {
+        [']p'] = '@parameter.inner',
       },
     },
   },
