@@ -15,6 +15,11 @@ return require('lazy').setup({
   'nvim-tree/nvim-tree.lua',
   'nvim-tree/nvim-web-devicons',
 
+  {
+    "folke/trouble.nvim",
+    requires = "nvim-tree/nvim-web-devicons",
+  },
+
   'theprimeagen/harpoon',
   'mbbill/undotree',
 
@@ -59,6 +64,14 @@ return require('lazy').setup({
 
   -- Multi-line selection
   'mg979/vim-visual-multi',
+
+  -- Surround text objects
+  {
+    'kylechui/nvim-surround',
+    version = "*",
+    event = "VeryLazy",
+    opts = {},
+  },
 
   -- Smart join lines in blocks
   {
