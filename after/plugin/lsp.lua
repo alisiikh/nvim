@@ -25,18 +25,22 @@ local function attach_lsp(bufnr)
   nmap('<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end,
     '[w]orkspace [l]ist folders')
 
+  local function fmt_code()
+    vim.lsp.buf.format({ bufnr = bufnr })
+  end
+
   -- Create a command `:Format` local to the LSP buffer
-  vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-    vim.lsp.buf.format()
-  end, { desc = 'lsp: format code' })
+  vim.api.nvim_buf_create_user_command(bufnr, 'Format', fmt_code, { desc = 'lsp: format code' })
+
+  -- Format code before save :w
+  vim.api.nvim_create_autocmd("BufWritePre", {
+    pattern = "<buffer>",
+    callback = fmt_code,
+  })
 end
 
 -- Setup neovim lua configuration
-require('neodev').setup()
-
--- Setup mason so it can manage external tooling
-require('mason').setup()
-
+-- require('neodev').setup()
 
 local lsp_group = vim.api.nvim_create_augroup("lsp", { clear = true })
 
@@ -56,7 +60,11 @@ local servers = {
   -- clangd = {},
   -- gopls = {},
   -- pyright = {},
-  rust_analyzer = {},
+  rust_analyzer = {
+    cargo = {
+      allFeatures = true,
+    }
+  },
   tsserver = {},
   lua_ls = {
     Lua = {
@@ -111,7 +119,7 @@ vim.api.nvim_create_autocmd("FileType", {
     end
 
     local metals = require("metals")
-    local metals_config = require("metals").bare_config()
+    local metals_config = metals.bare_config()
     metals_config = {
       tvp = {
         icons = {
@@ -155,6 +163,8 @@ vim.api.nvim_create_autocmd("FileType", {
           { desc = 'metals: implementation location' })
         map("n", "<leader>mi", [[<cmd>lua require("metals").import_build()<CR>]],
           { desc = 'metals: import build' })
+        map("n", "<leader>mc", [[<cmd>lua require("telescope").extensions.metals.commands()<CR>]],
+          { desc = 'metals: open commands' })
 
         attach_lsp(bufnr)
 
@@ -239,16 +249,36 @@ local rt = require('rust-tools')
 rt.setup({
   server = {
     on_attach = function(_, bufnr)
-      local nmap = require('helpers').nmap
+      attach_lsp(bufnr)
 
-      -- Hover actions (Run / Debug)
-      nmap("<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr, noremap = true })
-      -- Code action groups
-      nmap("<leader>ca", rt.code_action_group.code_action_group, { buffer = bufnr, noremap = true })
+      local nmap = require('helpers').nmap
+      nmap("<leader>ch", rt.hover_actions.hover_actions, { desc = 'rt: hover actions', buffer = bufnr, noremap = true })
+      nmap("<leader>cd", '<cmd>:RustDebuggables<CR>', { desc = 'rt: show debuggables', buffer = bufnr, noremap = true })
+
+      local dap = require('dap')
+
+      dap.configurations.rust = {
+        {
+          name = "Rust debug",
+          type = "rt_lldb",
+          request = "launch",
+          program = function()
+            return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/target/debug/', 'file')
+          end,
+          cwd = '${workspaceFolder}',
+          stopOnEntry = true,
+          showDisassembly = "never",
+        },
+      }
     end,
   },
   capabilities = capabilities,
   dap = {
     adapter = require('rust-tools.dap').get_codelldb_adapter(codelldb_path, liblldb_path)
+  },
+  tools = {
+    hover_actions = {
+      auto_focus = true
+    }
   }
 })

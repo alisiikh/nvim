@@ -19,6 +19,7 @@ map("n", "<F5>", dap.continue, { desc = 'dap: continue' })
 map("n", "<F6>", dap.step_over, { desc = 'dap: step over' })
 map("n", "<F7>", dap.step_into, { desc = 'dap: step into' })
 map("n", "<F8>", dap.step_out, { desc = 'dap: step out' })
+
 map("n", "<leader>dr", dap.repl.toggle, { desc = 'dap: repl toggle' })
 map("n", "<leader>dK", dap_widgets.hover, { desc = 'dap: hover' })
 
@@ -60,4 +61,3 @@ dap.configurations.lua = {
 dap.adapters.nlua = function(callback, config)
   callback({ type = "server", host = config.host or "127.0.0.1", port = config.port or 8086 })
 end
-

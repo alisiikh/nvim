@@ -57,11 +57,20 @@ return require('lazy').setup({
     end,
   },
 
+  {
+    -- Autocompletion
+    'hrsh7th/nvim-cmp',
+    dependencies = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip' }
+  },
+
   -- Scala metals
   {
     'scalameta/nvim-metals',
     dependencies = { "nvim-lua/plenary.nvim", "mfussenegger/nvim-dap" }
   },
+
+  -- show nice code actions window
+  { 'weilbith/nvim-code-action-menu',  cmd = 'CodeActionMenu' },
 
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
@@ -79,7 +88,7 @@ return require('lazy').setup({
     'neovim/nvim-lspconfig',
     dependencies = {
       -- Automatically install LSPs to stdpath for neovim
-      'williamboman/mason.nvim',
+      { 'williamboman/mason.nvim',           opts = {} },
       { 'williamboman/mason-lspconfig.nvim', opts = { 'lua_ls', 'rust-analyzer' } },
       {
         'jay-babu/mason-null-ls.nvim',
@@ -87,11 +96,10 @@ return require('lazy').setup({
         opts = { 'prettier', 'stylua', 'rustfmt' }
       },
 
-      { 'jay-babu/mason-nvim-dap.nvim',      opts = { 'codelldb' } },
+      { 'jay-babu/mason-nvim-dap.nvim', opts = { 'codelldb' } },
 
       -- Useful status updates for LSP
-      -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim',                 opts = {} },
+      { 'j-hui/fidget.nvim',            opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       {
@@ -110,13 +118,9 @@ return require('lazy').setup({
 
   { 'theHamsta/nvim-dap-virtual-text', opts = {} },
   { "rcarriga/nvim-dap-ui",            dependencies = { "mfussenegger/nvim-dap" } },
-  { 'simrat39/rust-tools.nvim',        dependencies = { 'nvim-lua/plenary.nvim' } },
+  { 'simrat39/rust-tools.nvim',        ft = 'rust' },
+  { 'saecki/crates.nvim',              opts = {},                                 ft = { 'rust', 'toml' } },
 
-  {
-    -- Autocompletion
-    'hrsh7th/nvim-cmp',
-    dependencies = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip' }
-  },
 
   -- Useful plugin to show you pending keybinds.
   'folke/which-key.nvim',
@@ -139,14 +143,15 @@ return require('lazy').setup({
   },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim',         opts = {} },
+  { 'numToStr/Comment.nvim',    opts = {} },
 
   -- todo comments highlighting and navigation
-  { 'folke/todo-comments.nvim',      dependencies = { 'nvim-lua/plenary.nvim' }, opts = {} },
+  { 'folke/todo-comments.nvim', dependencies = { 'nvim-lua/plenary.nvim' }, opts = {} },
 
+  'vim-test/vim-test',
 
   -- Fuzzy Finder (files, lsp, etc)
-  { 'nvim-telescope/telescope.nvim', version = '*',                              dependencies = { 'nvim-lua/plenary.nvim' } },
+  { 'nvim-telescope/telescope.nvim', version = '*', dependencies = { 'nvim-lua/plenary.nvim' } },
 
   -- Fuzzy Finder Algorithm which requires local dependencies to be built.
   -- Only load if `make` is available. Make sure you have the system

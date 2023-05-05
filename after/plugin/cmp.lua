@@ -5,6 +5,19 @@ local luasnip = require('luasnip')
 luasnip.config.setup {}
 
 cmp.setup {
+  window = {
+    completion = {
+      border = 'single',
+      scrollbar = '║',
+    },
+    documentation = {
+      border = nil,
+      scrollbar = '',
+    },
+  },
+  confirmation = {
+    completeopt = 'menu,menuone,noinsert',
+  },
   snippet = {
     expand = function(args)
       luasnip.lsp_expand(args.body)
@@ -46,5 +59,6 @@ cmp.setup {
       end
     },
     { name = 'luasnip' },
+    { name = 'crates' },
   },
 }
