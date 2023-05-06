@@ -1,6 +1,4 @@
-local function map(n, keys, cmd, opts)
-	vim.keymap.set(n, keys, cmd, opts)
-end
+local nmap = require('helpers').nmap
 
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
@@ -20,21 +18,24 @@ pcall(require('telescope').load_extension, 'fzf')
 
 -- Telescope
 -- See `:help telescope.builtin`
-local telescope = require('telescope.builtin')
-map('n', '<leader>?', telescope.oldfiles, { desc = 'find recently opened files' })
-map('n', '<leader><space>', telescope.buffers, { desc = 'find existing buffers' })
-map('n', '<leader>/', function()
-	-- You can pass additional configuration to telescope to change theme, layout, etc.
-	local themes = require('telescope.themes')
-	telescope.current_buffer_fuzzy_find(themes.get_dropdown {
-		winblend = 10,
-		previewer = false,
-	})
-end, { desc = 'Fuzzily search in current buffer' })
-map('n', '<leader>s', '<Nop>', { desc = 'telescope: Search' })
-map('n', '<leader>sf', telescope.git_files, { desc = '[s]earch [f]iles' })
-map('n', '<leader>sp', telescope.find_files, { desc = '[s]earch all files' })
-map('n', '<leader>sh', telescope.help_tags, { desc = '[s]earch [h]elp' })
-map('n', '<leader>sw', telescope.grep_string, { desc = '[s]earch current [w]ord' })
-map('n', '<leader>sg', telescope.live_grep, { desc = '[s]earch by [g]rep' })
-map('n', '<leader>sd', telescope.diagnostics, { desc = '[s]earch [d]iagnostics' })
+local telescope_builtin = require('telescope.builtin')
+
+nmap('<leader>?', telescope_builtin.oldfiles, { desc = 'find recently opened files' })
+nmap('<leader><space>', telescope_builtin.buffers, { desc = 'find existing buffers' })
+nmap('<leader>/',
+	function()
+		telescope_builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+			winblend = 10,
+			previewer = false,
+		})
+	end,
+	{ desc = 'fuzzy find in current buffer' }
+)
+
+nmap('<leader>sf', telescope_builtin.git_files, { desc = '[s]earch [f]iles' })
+nmap('<leader>sr', require('telescope').extensions.frecency.frecency, { desc = '[s]earch [r]ecent files' })
+nmap('<leader>sp', telescope_builtin.find_files, { desc = '[s]earch [p]roject files' })
+nmap('<leader>sh', telescope_builtin.help_tags, { desc = '[s]earch [h]elp' })
+nmap('<leader>sw', telescope_builtin.grep_string, { desc = '[s]earch current [w]ord' })
+nmap('<leader>sg', telescope_builtin.live_grep, { desc = '[s]earch by [g]rep' })
+nmap('<leader>sd', telescope_builtin.diagnostics, { desc = '[s]earch [d]iagnostics' })

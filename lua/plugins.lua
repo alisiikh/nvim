@@ -73,6 +73,15 @@ return require('lazy').setup({
     opts = {},
   },
 
+  -- Jump to any char in the buffer using as few keystrokes as possible
+  {
+    'phaazon/hop.nvim',
+    branch = 'v2',
+    opts = {
+      keys = 'etovxqpdygfblzhckisuran',
+    },
+  },
+
   -- Smart join lines in blocks
   {
     'Wansmer/treesj',
@@ -156,10 +165,15 @@ return require('lazy').setup({
   },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim',    opts = {} },
+  { 'numToStr/Comment.nvim',         opts = {} },
 
-  -- todo comments highlighting and navigation
-  { 'folke/todo-comments.nvim', dependencies = { 'nvim-lua/plenary.nvim' }, opts = {} },
+  --  comments highlighting and navigation
+  {
+    'folke/todo-comments.nvim',
+    event = "BufRead",
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    opts = {},
+  },
 
   'vim-test/vim-test',
 
@@ -178,6 +192,13 @@ return require('lazy').setup({
       return vim.fn.executable 'make' == 1
     end,
   },
+  {
+    "nvim-telescope/telescope-frecency.nvim",
+    config = function()
+      require("telescope").load_extension("frecency")
+    end,
+    dependencies = { "kkharji/sqlite.lua" }
+  },
 
   {
     -- Highlight, edit, and navigate code
@@ -187,12 +208,12 @@ return require('lazy').setup({
       pcall(require('nvim-treesitter.install').update { with_sync = true })
     end,
   },
+
   {
     'nvim-treesitter/nvim-treesitter-context',
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
     opts = {}
   },
-
 
 
   -- OpenAI ChatGPT
